@@ -1,8 +1,7 @@
 package com.example.poc1v1.controller;
 
 import com.google.gson.Gson;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +25,17 @@ public class RestApiController {
     public ResponseEntity<Void> sendMessage(@RequestBody Data data) {
         Gson gson = new Gson();
         String jsonString = gson.toJson(data);
-        System.out.println(jsonString);
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<String, String>("kafka-triangular-35651.caesars", jsonString);
+
+        kafkaProducer.send(producerRecord, new Callback() {
+            @Override
+            public void onCompletion(RecordMetadata metadata, Exception exception) {
+                if(exception != null)
+                    exception.printStackTrace();
+                else
+                    System.out.println("We sent message to Kafka Topic as offset {} " + metadata.offset());
+            }
+        });
         return null;
     }
 
