@@ -28,7 +28,7 @@ public class KafkaConfig {
         Properties props = new Properties();
         StringBuilder builder = new StringBuilder();
 
-        for(String url : System.getenv("KU").split(",")) {
+        for(String url : System.getenv("KAFKA_URL").split(",")) {
             try {
                 URI uri = new URI(url);
                 builder.append(String.format("%s:%d", uri.getHost(), uri.getPort()));
@@ -52,8 +52,8 @@ public class KafkaConfig {
 
                         try {
 
-                            EnvKeyStore envTrustStore = EnvKeyStore.createWithRandomPassword("KTC");
-                            EnvKeyStore envKeyStore = EnvKeyStore.createWithRandomPassword("KCCK", "KCC");
+                            EnvKeyStore envTrustStore = EnvKeyStore.createWithRandomPassword("KAFKA_TRUSTED_CERT");
+                            EnvKeyStore envKeyStore = EnvKeyStore.createWithRandomPassword("KAFKA_CLIENT_CERT_KEY", "KAFKA_CLIENT_CERT");
 
                             File trustStore = envTrustStore.storeTemp();
                             File keyStore = envKeyStore.storeTemp();
