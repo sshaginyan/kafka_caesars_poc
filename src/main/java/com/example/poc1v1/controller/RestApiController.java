@@ -19,7 +19,7 @@ public class RestApiController {
 
     RestApiController () {
         KafkaConfig config = new KafkaConfig();
-        kafkaProducer = new KafkaProducer<>(config.getKafkaProps());
+        //kafkaProducer = new KafkaProducer<>(config.getKafkaProps());
     }
 
     @PostMapping("/send-message")
