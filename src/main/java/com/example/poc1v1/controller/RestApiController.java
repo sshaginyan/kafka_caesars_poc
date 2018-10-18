@@ -25,7 +25,7 @@ public class RestApiController {
     public ResponseEntity<Void> sendMessage(@RequestBody Data data) {
         Gson gson = new Gson();
         String jsonString = gson.toJson(data);
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<String, String>("kafka-triangular-35651.caesars", jsonString);
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<String, String>("caesars", jsonString);
 
         kafkaProducer.send(producerRecord, new Callback() {
             @Override
