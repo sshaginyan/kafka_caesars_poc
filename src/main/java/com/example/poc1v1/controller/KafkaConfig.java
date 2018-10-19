@@ -58,20 +58,13 @@ public class KafkaConfig {
                             File trustStore = envTrustStore.storeTemp();
                             File keyStore = envKeyStore.storeTemp();
 
-                            System.out.println("================================");
-                            System.out.println(trustStore.getAbsolutePath());
-                            System.out.println(keyStore.getAbsolutePath());
-                            System.out.println(envTrustStore.type());
-                            System.out.println(envKeyStore.type());
-                            //  /app
 
-
-                            props.put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, envTrustStore.type());
-                            props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, trustStore.getAbsolutePath());
-                            props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, envTrustStore.password());
-                            props.put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, envKeyStore.type());
-                            props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, keyStore.getAbsolutePath());
-                            props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, envKeyStore.password());
+                            props.put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, "PKCS12");
+                            props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, "/app/.truststore.jks");
+                            props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, "abc123abc");
+                            props.put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, "PKCS12");
+                            props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, "/app/.keystore.jks");
+                            props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, "abc123abc");
 
 
                         } catch (IOException ioe) {
