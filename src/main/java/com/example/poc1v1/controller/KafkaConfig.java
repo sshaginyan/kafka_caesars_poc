@@ -58,6 +58,10 @@ public class KafkaConfig {
                             File trustStore = envTrustStore.storeTemp();
                             File keyStore = envKeyStore.storeTemp();
 
+                            System.out.println("================================");
+                            System.out.println(trustStore.getAbsolutePath());
+                            System.out.println(keyStore.getAbsolutePath());
+
                             props.put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, envTrustStore.type());
                             props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, trustStore.getAbsolutePath());
                             props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, envTrustStore.password());
