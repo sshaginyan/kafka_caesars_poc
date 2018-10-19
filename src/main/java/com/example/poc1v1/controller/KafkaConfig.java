@@ -28,7 +28,9 @@ public class KafkaConfig {
         Properties props = new Properties();
         StringBuilder builder = new StringBuilder();
 
-        for(String url : System.getenv("KAFKA_URL").split(",")) {
+        String urls = "kafka+ssl://ec2-18-205-195-23.compute-1.amazonaws.com:9096,kafka+ssl://ec2-52-23-142-233.compute-1.amazonaws.com:9096,kafka+ssl://ec2-34-234-251-64.compute-1.amazonaws.com:9096";
+
+        for(String url : urls.split(",")) {
             try {
                 URI uri = new URI(url);
                 builder.append(String.format("%s:%d", uri.getHost(), uri.getPort()));
@@ -50,13 +52,13 @@ public class KafkaConfig {
                         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
                         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
-                        try {
+                        //try {
 
-                            EnvKeyStore envTrustStore = EnvKeyStore.createWithRandomPassword("KAFKA_TRUSTED_CERT");
-                            EnvKeyStore envKeyStore = EnvKeyStore.createWithRandomPassword("KAFKA_CLIENT_CERT_KEY", "KAFKA_CLIENT_CERT");
-
-                            File trustStore = envTrustStore.storeTemp();
-                            File keyStore = envKeyStore.storeTemp();
+//                            EnvKeyStore envTrustStore = EnvKeyStore.createWithRandomPassword("KAFKA_TRUSTED_CERT");
+//                            EnvKeyStore envKeyStore = EnvKeyStore.createWithRandomPassword("KAFKA_CLIENT_CERT_KEY", "KAFKA_CLIENT_CERT");
+//
+//                            File trustStore = envTrustStore.storeTemp();
+//                            File keyStore = envKeyStore.storeTemp();
 
 
                             props.put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, "PKCS12");
@@ -66,16 +68,23 @@ public class KafkaConfig {
                             props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, "/app/.keystore.jks");
                             props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, "abc123abc");
 
+//                        props.put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, "PKCS12");
+//                        props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, "/Users/sshaginyan/Development/poc1v1/.truststore.jks");
+//                        props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, "abc123abc");
+//                        props.put(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, "PKCS12");
+//                        props.put(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, "/Users/sshaginyan/Development/poc1v1/.keystore.jks");
+//                        props.put(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, "abc123abc");
 
-                        } catch (IOException ioe) {
-                            throw new RuntimeException(ioe);
-                        } catch (KeyStoreException kse) {
-                            throw new RuntimeException(kse);
-                        } catch (NoSuchAlgorithmException nsa) {
-                            throw new RuntimeException(nsa);
-                        } catch (CertificateException ce) {
-                            throw new RuntimeException(ce);
-                        }
+
+//                        } catch (IOException ioe) {
+//                            throw new RuntimeException(ioe);
+//                        } catch (KeyStoreException kse) {
+//                            throw new RuntimeException(kse);
+//                        } catch (NoSuchAlgorithmException nsa) {
+//                            throw new RuntimeException(nsa);
+//                        } catch (CertificateException ce) {
+//                            throw new RuntimeException(ce);
+//                        }
                         break;
                 }
 
