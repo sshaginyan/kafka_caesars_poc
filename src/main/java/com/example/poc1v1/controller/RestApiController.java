@@ -67,7 +67,7 @@ public class RestApiController {
 
             Class.forName("org.postgresql.Driver");
             c = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"));
-            
+
 
 
         } catch (Exception e) {
