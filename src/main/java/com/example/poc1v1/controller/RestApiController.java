@@ -17,9 +17,11 @@ import java.io.File;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Collections;
+import java.util.HashMap;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import com.google.gson.reflect.TypeToken;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +53,9 @@ public class RestApiController {
                 for(ConsumerRecord<String, String> record : records) {
                     logger.info("Key: " + record.key() + " Value: " + record.value());
                     logger.info("Partition: " + record.partition() + " Offset: " + record.offset());
+                    HashMap<String,String> map = new Gson().fromJson(record.value(), new TypeToken<HashMap<String, String>>(){}.getType());
+                    logger.info(map.get("firstName"));
+                    logger.info("=================================================================");
                 }
             }
         }
