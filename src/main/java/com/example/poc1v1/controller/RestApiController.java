@@ -64,6 +64,7 @@ public class RestApiController {
                             map.get("lastName") + ", " +
                             map.get("email") + ", " +
                             map.get("phoneNumber") + ");";
+                    logger.info(sql);
                     stmt.executeUpdate(sql);
                 }
             }
