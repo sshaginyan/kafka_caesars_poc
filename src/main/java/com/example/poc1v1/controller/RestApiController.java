@@ -24,6 +24,9 @@ import java.security.cert.CertificateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 @RestController
 @RequestMapping("/api")
 public class RestApiController {
@@ -56,6 +59,27 @@ public class RestApiController {
     RestApiController () {
 
         logger = LoggerFactory.getLogger(this.getClass());
+
+
+        Connection c = null;
+
+        try {
+
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"));
+            
+
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            System.err.println(e.getClass().getName()+": "+e.getMessage());
+
+            System.exit(0);
+
+        }
+
 
         try {
 
