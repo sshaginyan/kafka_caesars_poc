@@ -21,7 +21,7 @@ import java.util.Properties;
 public class KafkaConfig {
     private Logger logger;
 
-    public Properties getKafkaProps() {
+    public Properties getKafkaProps(EnvKeyStore envTrustStore, EnvKeyStore envKeyStore, File trustStore, File keyStore) {
 
         logger = LoggerFactory.getLogger(this.getClass());
 
@@ -50,13 +50,13 @@ public class KafkaConfig {
                         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
                         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
-                        try {
+                        //try {
 
-                            EnvKeyStore envTrustStore = EnvKeyStore.createWithRandomPassword("KAFKA_TRUSTED_CERT");
-                            EnvKeyStore envKeyStore = EnvKeyStore.createWithRandomPassword("KAFKA_CLIENT_CERT_KEY", "KAFKA_CLIENT_CERT");
-
-                            File trustStore = envTrustStore.storeTemp();
-                            File keyStore = envKeyStore.storeTemp();
+//                            EnvKeyStore envTrustStore = EnvKeyStore.createWithRandomPassword("KAFKA_TRUSTED_CERT");
+//                            EnvKeyStore envKeyStore = EnvKeyStore.createWithRandomPassword("KAFKA_CLIENT_CERT_KEY", "KAFKA_CLIENT_CERT");
+//
+//                            File trustStore = envTrustStore.storeTemp();
+//                            File keyStore = envKeyStore.storeTemp();
 
                             props.put(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, envTrustStore.type());
                             props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, trustStore.getAbsolutePath());
@@ -69,15 +69,15 @@ public class KafkaConfig {
                             props.put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "");
 
 
-                        } catch (IOException ioe) {
-                            throw new RuntimeException(ioe);
-                        } catch (KeyStoreException kse) {
-                            throw new RuntimeException(kse);
-                        } catch (NoSuchAlgorithmException nsa) {
-                            throw new RuntimeException(nsa);
-                        } catch (CertificateException ce) {
-                            throw new RuntimeException(ce);
-                        }
+//                        } catch (IOException ioe) {
+//                            throw new RuntimeException(ioe);
+//                        } catch (KeyStoreException kse) {
+//                            throw new RuntimeException(kse);
+//                        } catch (NoSuchAlgorithmException nsa) {
+//                            throw new RuntimeException(nsa);
+//                        } catch (CertificateException ce) {
+//                            throw new RuntimeException(ce);
+//                        }
                         break;
                 }
 

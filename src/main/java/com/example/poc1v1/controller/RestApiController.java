@@ -10,6 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.poc1v1.model.Data;
 
+import com.github.jkutner.EnvKeyStore;
+
+import java.io.File;
+import java.io.IOException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+
 @RestController
 @RequestMapping("/api")
 public class RestApiController {
@@ -17,8 +25,29 @@ public class RestApiController {
     protected Producer<String,String> kafkaProducer;
 
     RestApiController () {
-        KafkaConfig config = new KafkaConfig();
-        kafkaProducer = new KafkaProducer<>(config.getKafkaProps());
+
+        try {
+
+            EnvKeyStore envTrustStore = EnvKeyStore.createWithRandomPassword("KAFKA_TRUSTED_CERT");
+            EnvKeyStore envKeyStore = EnvKeyStore.createWithRandomPassword("KAFKA_CLIENT_CERT_KEY", "KAFKA_CLIENT_CERT");
+
+            File trustStore = envTrustStore.storeTemp();
+            File keyStore = envKeyStore.storeTemp();
+
+            KafkaConfig config = new KafkaConfig();
+            kafkaProducer = new KafkaProducer<>(config.getKafkaProps(envTrustStore, envKeyStore, trustStore, keyStore));
+
+        } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+        } catch (KeyStoreException kse) {
+            throw new RuntimeException(kse);
+        } catch (NoSuchAlgorithmException nsa) {
+            throw new RuntimeException(nsa);
+        } catch (CertificateException ce) {
+            throw new RuntimeException(ce);
+        }
+
+
     }
 
     @PostMapping("/send-message")
