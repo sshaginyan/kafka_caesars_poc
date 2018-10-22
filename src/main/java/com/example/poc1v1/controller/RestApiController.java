@@ -60,9 +60,9 @@ public class RestApiController {
                     logger.info("Partition: " + record.partition() + " Offset: " + record.offset());
                     HashMap<String,String> map = new Gson().fromJson(record.value(), new TypeToken<HashMap<String, String>>(){}.getType());
                     sql = "INSERT INTO customers (firstName, lastName, email, phoneNumber) VALUES (" +
-                            map.get("firstName") + ", " +
-                            map.get("lastName") + ", " +
-                            map.get("email") + ", " +
+                            map.get("firstName") + "\", \"" +
+                            map.get("lastName") + "\", \"" +
+                            map.get("email") + "\", \"" +
                             map.get("phoneNumber") + ");";
                     logger.info(sql);
                     stmt.executeUpdate(sql);
