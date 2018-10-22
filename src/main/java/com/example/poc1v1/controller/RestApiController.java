@@ -32,6 +32,27 @@ public class RestApiController {
     protected Producer<String,String> kafkaProducer;
     protected KafkaConsumer<String,String> kafkaConsumer;
 
+
+    private class ConsumerThread extends Thread {
+
+        protected KafkaConsumer<String,String> kafkaConsumer;
+
+        public ConsumerThread(KafkaConsumer<String,String> kafkaConsumer) {
+            this.kafkaConsumer = kafkaConsumer;
+        }
+
+        public void run() {
+            while(true) {
+                ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofMillis(100));
+
+                for(ConsumerRecord<String, String> record : records) {
+                    logger.info("Key: " + record.key() + " Value: " + record.value());
+                    logger.info("Partition: " + record.partition() + " Offset: " + record.offset());
+                }
+            }
+        }
+    }
+
     RestApiController () {
 
         logger = LoggerFactory.getLogger(this.getClass());
@@ -52,14 +73,7 @@ public class RestApiController {
 
             kafkaConsumer.subscribe(Collections.singleton("caesars"));
 
-            while(true) {
-                ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofMillis(100));
-
-                for(ConsumerRecord<String, String> record : records) {
-                    logger.info("Key: " + record.key() + " Value: " + record.value());
-                    logger.info("Partition: " + record.partition() + " Offset: " + record.offset());
-                }
-            }
+            new ConsumerThread(kafkaConsumer).start();
 
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
