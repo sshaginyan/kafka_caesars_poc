@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.sql.*;
 
 import com.example.poc1v1.model.Data;
 
@@ -33,6 +34,7 @@ import java.sql.DriverManager;
 @RequestMapping("/api")
 public class RestApiController {
 
+    public Connection c = null;
     private Logger logger;
     protected Producer<String,String> kafkaProducer;
     protected KafkaConsumer<String,String> kafkaConsumer;
@@ -40,6 +42,7 @@ public class RestApiController {
 
     private class ConsumerThread extends Thread {
 
+        public Statement stmt = null;
         protected KafkaConsumer<String,String> kafkaConsumer;
 
         public ConsumerThread(KafkaConsumer<String,String> kafkaConsumer) {
@@ -47,17 +50,31 @@ public class RestApiController {
         }
 
         public void run() {
+            try {
+                stmt = c.createStatement();
             while(true) {
+                String sql;
                 ConsumerRecords<String, String> records = kafkaConsumer.poll(Duration.ofMillis(100));
-
                 for(ConsumerRecord<String, String> record : records) {
                     logger.info("Key: " + record.key() + " Value: " + record.value());
                     logger.info("Partition: " + record.partition() + " Offset: " + record.offset());
                     HashMap<String,String> map = new Gson().fromJson(record.value(), new TypeToken<HashMap<String, String>>(){}.getType());
-                    logger.info(map.get("firstName"));
-                    logger.info("=================================================================");
+                    sql = "INSERT INTO customers (firstName, lastName, email, phoneNumber) VALUES (" +
+                            map.get("firstName") + ", " +
+                            map.get("lastName") + ", " +
+                            map.get("email") + ", " +
+                            map.get("phoneNumber") + ");";
+                    stmt.executeUpdate(sql);
                 }
             }
+
+        }catch(SQLException se){
+            //Handle errors for JDBC
+            se.printStackTrace();
+        }catch(Exception e){
+            //Handle errors for Class.forName
+            e.printStackTrace();
+        }
         }
     }
 
@@ -66,7 +83,7 @@ public class RestApiController {
         logger = LoggerFactory.getLogger(this.getClass());
 
 
-        Connection c = null;
+
 
         try {
 
